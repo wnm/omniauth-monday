@@ -9,6 +9,16 @@ module OmniAuth
         token_url: "https://auth.monday.com/oauth2/token",
       }
 
+      option :default_query, <<~GRAPHQL
+        query {
+          me {
+            email
+            name
+            id
+          }
+        }
+      GRAPHQL
+
       def request_phase
         super
       end
@@ -44,40 +54,7 @@ module OmniAuth
       end
 
       def query
-        <<~GRAPHQL
-          query {
-            me {
-              birthday
-              country_code
-              created_at
-              current_language
-              join_date
-              email
-              enabled
-              id
-              is_admin
-              is_guest
-              is_pending
-              is_verified
-              is_view_only
-              last_activity
-              location
-              mobile_phone
-              name
-              phone
-              photo_original
-              photo_small
-              photo_thumb
-              photo_thumb_small
-              photo_tiny
-              sign_up_product_kind
-              time_zone_identifier
-              title
-              url
-              utc_hours_diff
-            }
-          }
-        GRAPHQL
+        options[:query] || options[:default_query]
       end
     end
   end
