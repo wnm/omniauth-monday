@@ -48,7 +48,10 @@ module OmniAuth
       def me
         @me ||= begin
           access_token.options[:mode] = :header
-          response = access_token.post("", body: { query: query }).parsed
+          response = access_token.post("") do |request|
+            request.headers["Content-Type"] = "application/json"
+            request.body = { query: query }.to_json
+          end.parsed
           response["data"]["me"].merge("account_id": response["account_id"])
         end
       end
